@@ -24,23 +24,27 @@
       </div>
 
       <section class="two-col two-col--cart">
-        <div class="card pad">
-          <div class="panel-title">商品列表</div>
-          <table class="table cart-table" data-role="cart-table" style="display:none;">
-            <thead>
-              <tr>
-                <th>商品</th>
-                <th>单价</th>
-                <th>数量</th>
-                <th>小计</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-          <div class="notice" style="margin-top:12px;">
-            <strong>小技巧：</strong>修改数量后会自动刷新计算，数据将持久保存。
+        <div class="cart-left-col">
+          <div class="card pad">
+            <div class="panel-title">商品列表</div>
+            <table class="table cart-table" data-role="cart-table" style="display:none;">
+              <thead>
+                <tr>
+                  <th>商品</th>
+                  <th>单价</th>
+                  <th>数量</th>
+                  <th>小计</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="notice" style="margin-top:12px;">
+              <strong>小技巧：</strong>修改数量后会自动刷新计算，数据将持久保存。
+            </div>
           </div>
+
+          <div data-role="coupon-area" style="display:none;"></div>
         </div>
 
         <div data-role="cart-totals" style="display:none;"></div>
