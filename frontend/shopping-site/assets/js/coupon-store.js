@@ -170,6 +170,30 @@ export function calcCouponDiscount(coupon, cartLines, subtotal) {
   return 0;
 }
 
+function calcComboDiscount(combo, cartLines, subtotal) {
+  const sorted = [...combo].sort((a, b) => {
+    const order = { birthday: 0, threshold: 1, brand: 2, points: 3 };
+    return (order[a.type] || 99) - (order[b.type] || 99);
+  });
+
+  let runningTotal = Number(subtotal) || 0;
+  let totalDiscount = 0;
+  const details = [];
+
+  for (const c of sorted) {
+    const d = calcCouponDiscount(c, cartLines, runningTotal);
+    details.push({ coupon: c, discount: d, applied: true });
+    totalDiscount += d;
+    runningTotal -= d;
+  }
+
+  return {
+    combo: sorted,
+    totalDiscount,
+    details,
+  };
+}
+
 export function calcBestCombination(cartLines, subtotal) {
   const coupons = getCoupons();
   const points = getPoints();
@@ -197,21 +221,21 @@ export function calcBestCombination(cartLines, subtotal) {
 
   let bestCombo = [];
   let bestDiscount = 0;
+  let bestDetails = [];
 
   for (const combo of combos) {
-    let totalDiscount = 0;
-    for (const c of combo) {
-      totalDiscount += calcCouponDiscount(c, cartLines, subtotal - totalDiscount);
-    }
-    if (totalDiscount > bestDiscount) {
-      bestDiscount = totalDiscount;
-      bestCombo = combo;
+    const result = calcComboDiscount(combo, cartLines, subtotal);
+    if (result.totalDiscount > bestDiscount) {
+      bestDiscount = result.totalDiscount;
+      bestCombo = result.combo;
+      bestDetails = result.details;
     }
   }
 
   return {
     bestCombo,
     bestDiscount,
+    bestDetails,
     allCoupons,
     pointsCoupon,
   };
@@ -265,26 +289,11 @@ export function calcSelectedDiscount(selectedIds, cartLines, subtotal) {
   let bestDetails = [];
 
   for (const combo of combos) {
-    const sorted = [...combo].sort((a, b) => {
-      const order = { birthday: 0, threshold: 1, brand: 2, points: 3 };
-      return (order[a.type] || 99) - (order[b.type] || 99);
-    });
-
-    let runningTotal = Number(subtotal) || 0;
-    let totalDiscount = 0;
-    const details = [];
-
-    for (const c of sorted) {
-      const d = calcCouponDiscount(c, cartLines, runningTotal);
-      details.push({ coupon: c, discount: d, applied: true });
-      totalDiscount += d;
-      runningTotal -= d;
-    }
-
-    if (totalDiscount > bestDiscount) {
-      bestDiscount = totalDiscount;
-      bestCombo = sorted;
-      bestDetails = details;
+    const result = calcComboDiscount(combo, cartLines, subtotal);
+    if (result.totalDiscount > bestDiscount) {
+      bestDiscount = result.totalDiscount;
+      bestCombo = result.combo;
+      bestDetails = result.details;
     }
   }
 

@@ -159,7 +159,7 @@ function renderCart() {
             ${best.bestCombo.map((c) => `<span class="coupon-best__tag">${c.name}</span>`).join(" + ")}
           </div>
           <div class="coupon-best__save">
-            共省 <strong>${money(best.bestDiscount)}</strong>
+            礼券共省 <strong>${money(best.bestDiscount)}</strong>
           </div>
           <button class="btn primary btn-sm" type="button" data-action="apply-best">一键使用最优方案</button>
         </div>
